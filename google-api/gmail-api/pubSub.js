@@ -51,7 +51,7 @@ const stopPubSub = async () => {
       userId: 'wsfalam84@gmail.com',
     });
 
-    // console.log(res);
+    console.log(res);
   } catch (err) {
     console.log('💥Error: ', err);
   }
@@ -61,7 +61,7 @@ const getHistory = async () => {
   try {
     const res = await users.history.list({
       userId: 'wsfalam84@gmail.com',
-      startHistoryId: 996629,
+      startHistoryId: 998036,
     });
 
     console.log(JSON.stringify(res.data, null, 4));
@@ -74,11 +74,16 @@ const getMessage = async () => {
   try {
     const message = await users.messages.get({
       userId: 'wsfalam84@gmail.com',
-      id: '187950f9965dfb18',
+      id: '187998ff04a4fc3f',
       format: 'full',
     });
 
-    const headers = message.data.payload.headers;
+    if (process.argv[3] === '-full') {
+      console.log(message);
+    }
+
+    const { snippet: mailBody, payload } = message.data;
+    const { headers } = payload;
 
     const { value: sender } =
       headers.find((header) => header.name === 'From') || {};
@@ -86,8 +91,6 @@ const getMessage = async () => {
       headers.find((header) => header.name === 'To') || {};
     const { value: subject } =
       headers.find((header) => header.name === 'Subject') || {};
-
-    const mailBody = message.data.snippet;
 
     const data = {
       sender,
@@ -102,15 +105,17 @@ const getMessage = async () => {
   }
 };
 
-const command = process.argv[2];
-
-if (command === '--connect') {
-  connetPubSub();
-}
-if (command === '--stop') {
-  stopPubSub();
-} else if (command === '--get-history') {
-  getHistory();
-} else if (command === '--get-message') {
-  getMessage();
+switch (process.argv[2]) {
+  case '--connect':
+    connetPubSub();
+    break;
+  case '--stop':
+    stopPubSub();
+    break;
+  case '--get-history':
+    getHistory();
+    break;
+  case '--get-message':
+    getMessage();
+    break;
 }
