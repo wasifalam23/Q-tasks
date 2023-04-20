@@ -1,17 +1,15 @@
 const { google } = require('googleapis');
-const { gmail } = require('googleapis/build/src/apis/gmail');
+const authorize = require('./auth');
 
-const { client_id, client_secret, redirect_uris, refresh_token } =
-  require('../credentials-gmail.json').web;
-
-const oAuth2Client = new google.auth.OAuth2(
-  client_id,
-  client_secret,
-  redirect_uris[0]
-);
-
-oAuth2Client.setCredentials({ refresh_token });
-const { users } = google.gmail({ version: 'v1', auth: oAuth2Client });
+const authorizeGmail = async () => {
+  try {
+    const auth = await authorize();
+    const gmail = google.gmail({ version: 'v1', auth });
+    return gmail;
+  } catch (err) {
+    console.err(err);
+  }
+};
 
 /*
 const getMessageList = async () => {
@@ -30,7 +28,8 @@ const getMessageList = async () => {
 
 const connetPubSub = async () => {
   try {
-    const res = await users.watch({
+    const gmail = await authorizeGmail();
+    const res = await gmail.users.watch({
       userId: 'wsfalam84@gmail.com',
       requestBody: {
         labelIds: ['INBOX'],
@@ -38,7 +37,6 @@ const connetPubSub = async () => {
         topicName: 'projects/learning-gmail-api-nodejs/topics/gmail-topic',
       },
     });
-
     console.log(res.data);
   } catch (err) {
     console.log('💥Error: ', err);
@@ -47,7 +45,8 @@ const connetPubSub = async () => {
 
 const stopPubSub = async () => {
   try {
-    const res = await users.stop({
+    const gmail = await authorizeGmail();
+    const res = await gmail.users.stop({
       userId: 'wsfalam84@gmail.com',
     });
 
@@ -59,9 +58,10 @@ const stopPubSub = async () => {
 
 const getHistory = async () => {
   try {
-    const res = await users.history.list({
+    const gmail = await authorizeGmail();
+    const res = await gmail.users.history.list({
       userId: 'wsfalam84@gmail.com',
-      startHistoryId: 998036,
+      startHistoryId: 999855,
     });
 
     console.log(JSON.stringify(res.data, null, 4));
@@ -72,9 +72,10 @@ const getHistory = async () => {
 
 const getMessage = async () => {
   try {
-    const message = await users.messages.get({
+    const gmail = await authorizeGmail();
+    const message = await gmail.users.messages.get({
       userId: 'wsfalam84@gmail.com',
-      id: '187998ff04a4fc3f',
+      id: '1879d6d4c7d33df7',
       format: 'full',
     });
 

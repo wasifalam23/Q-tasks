@@ -65,11 +65,15 @@ async function authorize() {
   return client;
 }
 
+module.exports = authorize;
+
+/*
 /**
  * Lists the labels in the user's account.
  *
  * @param {google.auth.OAuth2} auth An authorized OAuth2 client.
  */
+/*
 async function listLabels(auth) {
   const gmail = google.gmail({ version: 'v1', auth });
   const res = await gmail.users.labels.list({
@@ -85,7 +89,6 @@ async function listLabels(auth) {
     console.log(`- ${label.name}`);
   });
 }
-
-authorize().then(listLabels).catch(console.error);
-
+*/
+// authorize().then(listLabels).catch(console.error);
 // "redirect_uris": ["https://developers.google.com/oauthplayground"],
