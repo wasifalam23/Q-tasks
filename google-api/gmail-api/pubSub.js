@@ -26,17 +26,35 @@ const getMessageList = async () => {
 };
 */
 
+const listLabels = async () => {
+  const gmail = await authorizeGmail();
+  const res = await gmail.users.labels.list({
+    userId: 'wsfalam84@gmail.com',
+  });
+  const labels = res.data.labels;
+  if (!labels || labels.length === 0) {
+    console.log('No labels found.');
+    return;
+  }
+  console.log(labels);
+  console.log('Labels:');
+  labels.forEach((label) => {
+    console.log(`- ${label.name}`);
+  });
+};
+
 const connetPubSub = async () => {
   try {
     const gmail = await authorizeGmail();
     const res = await gmail.users.watch({
-      userId: 'wsfalam84@gmail.com',
+      userId: 'me',
       requestBody: {
-        labelIds: ['INBOX'],
+        labelIds: ['UNREAD'], // useless, a bug on the api
         labelFilterAction: 'include',
         topicName: 'projects/learning-gmail-api-nodejs/topics/gmail-topic',
       },
     });
+
     console.log(res.data);
   } catch (err) {
     console.log('💥Error: ', err);
@@ -47,7 +65,7 @@ const stopPubSub = async () => {
   try {
     const gmail = await authorizeGmail();
     const res = await gmail.users.stop({
-      userId: 'wsfalam84@gmail.com',
+      userId: 'me',
     });
 
     console.log(res);
@@ -56,15 +74,32 @@ const stopPubSub = async () => {
   }
 };
 
+const history = { historyId: '1005924', expiration: '1682938589250' }; // => new connect (16:26)
+// const history = { emailAddress: 'wsfalam84@gmail.com', historyId: 1006196 }; // => latest
+// const history = { emailAddress: 'wsfalam84@gmail.com', historyId: 1006004 }; // =>  new mail,
+
 const getHistory = async () => {
   try {
     const gmail = await authorizeGmail();
     const res = await gmail.users.history.list({
-      userId: 'wsfalam84@gmail.com',
-      startHistoryId: 999855,
+      startHistoryId: history.historyId,
+      userId: 'me',
+      labelId: ['UNREAD'],
+      historyTypes: ['messageAdded'],
     });
 
     console.log(JSON.stringify(res.data, null, 4));
+
+    if (!res.data.history || res.data.history.length === 0) return;
+    const messageIds = res.data.history.flatMap((thread) => {
+      if (thread.hasOwnProperty('messagesAdded')) {
+        return thread.messagesAdded.map((message) => message.message.id);
+      } else {
+        return [];
+      }
+    });
+
+    console.log([...new Set(messageIds)]);
   } catch (err) {
     console.log('💥Error: ', err);
   }
@@ -74,8 +109,8 @@ const getMessage = async () => {
   try {
     const gmail = await authorizeGmail();
     const message = await gmail.users.messages.get({
-      userId: 'wsfalam84@gmail.com',
-      id: '1879d6d4c7d33df7',
+      userId: 'me',
+      id: '187b39fd3249f403',
       format: 'full',
     });
 
@@ -107,6 +142,9 @@ const getMessage = async () => {
 };
 
 switch (process.argv[2]) {
+  case '--get-list':
+    listLabels();
+    break;
   case '--connect':
     connetPubSub();
     break;
