@@ -1,5 +1,6 @@
 node_modules
-credentials-gmail.json
+credentials_gmail-wasif.json
+credentials_gmail-yousuf.json
 credentials-gdrive.json
 credentials-sheets.json
 token.json

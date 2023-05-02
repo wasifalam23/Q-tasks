@@ -1,5 +1,3 @@
-const fs = require('fs').promises;
-const path = require('path');
 const dotenv = require('dotenv');
 dotenv.config({ path: './config.env' });
 
@@ -28,10 +26,17 @@ const getMessage = async (msgId) => {
       format: 'full',
     });
 
-    console.log(JSON.stringify(message.data.payload.body.data, null, 4));
-
-    const { snippet: mailBody, payload } = message.data;
+    const { payload } = message.data;
     const { headers } = payload;
+
+    const { body } = message.data.payload.parts.find(
+      (item) => item.mimeType === 'text/plain' || {}
+    );
+
+    const mailBody = `${Buffer.from(body.data, 'base64')}`.replace(
+      /\r?\n|\r|\+/g,
+      ''
+    );
 
     const { value: sender } =
       headers.find((header) => header.name === 'From') || {};

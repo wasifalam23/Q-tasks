@@ -7,7 +7,7 @@ const authorizeGmail = async () => {
     const gmail = google.gmail({ version: 'v1', auth });
     return gmail;
   } catch (err) {
-    console.err(err);
+    console.error(err);
   }
 };
 
@@ -29,7 +29,7 @@ const getMessageList = async () => {
 const listLabels = async () => {
   const gmail = await authorizeGmail();
   const res = await gmail.users.labels.list({
-    userId: 'wsfalam84@gmail.com',
+    userId: 'me',
   });
   const labels = res.data.labels;
   if (!labels || labels.length === 0) {
@@ -74,9 +74,7 @@ const stopPubSub = async () => {
   }
 };
 
-const history = { historyId: '1005924', expiration: '1682938589250' }; // => new connect (16:26)
-// const history = { emailAddress: 'wsfalam84@gmail.com', historyId: 1006196 }; // => latest
-// const history = { emailAddress: 'wsfalam84@gmail.com', historyId: 1006004 }; // =>  new mail,
+const history = { historyId: '1019733', expiration: '1683641227837' }; // => new connect (16:26)
 
 const getHistory = async () => {
   try {
@@ -110,7 +108,7 @@ const getMessage = async () => {
     const gmail = await authorizeGmail();
     const message = await gmail.users.messages.get({
       userId: 'me',
-      id: '187b39fd3249f403',
+      id: '187dce434963126a',
       format: 'full',
     });
 
@@ -118,8 +116,17 @@ const getMessage = async () => {
       console.log(message);
     }
 
-    const { snippet: mailBody, payload } = message.data;
+    const { payload } = message.data;
     const { headers } = payload;
+
+    const { body } = message.data.payload.parts.find(
+      (item) => item.mimeType === 'text/plain' || {}
+    );
+
+    const mailBody = `${Buffer.from(body.data, 'base64')}`.replace(
+      /\r?\n|\r|\+/g,
+      ''
+    );
 
     const { value: sender } =
       headers.find((header) => header.name === 'From') || {};
