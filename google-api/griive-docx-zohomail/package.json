@@ -1,0 +1,12 @@
+{
+	"dependencies": {
+		"@google-cloud/local-auth": "^2.1.0",
+		"@googleapis/drive": "^8.7.0",
+		"axios": "^1.6.7",
+		"docxtemplater": "^3.44.0",
+		"googleapis": "^105.0.0",
+		"libreoffice-convert": "^1.5.1",
+		"nodemailer": "^6.9.1",
+		"pizzip": "^3.1.6"
+	}
+}
