@@ -1,0 +1,23 @@
+{
+	"name": "auto-invoice",
+	"version": "1.0.0",
+	"description": "",
+	"main": "index.js",
+	"scripts": {
+		"test": "echo \"Error: no test specified\" && exit 1"
+	},
+	"keywords": [],
+	"author": "",
+	"license": "ISC",
+	"dependencies": {
+		"@aws-sdk/client-s3": "^3.529.1",
+		"@aws-sdk/lib-storage": "^3.529.1",
+		"axios": "^1.6.7",
+		"docxtemplater": "^3.44.0",
+		"dotenv": "^16.4.5",
+		"googleapis": "^133.0.0",
+		"moment": "^2.30.1",
+		"pizzip": "^3.1.6",
+		"realm-web": "^2.0.0"
+	}
+}

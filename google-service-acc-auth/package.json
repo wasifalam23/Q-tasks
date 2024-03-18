@@ -1,0 +1,21 @@
+{
+  "name": "g-service",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@googleapis/drive": "^8.7.0",
+    "axios": "^1.6.7",
+    "google-auth-library": "^9.6.3",
+    "googleapis": "^134.0.0"
+  },
+  "devDependencies": {
+    "dotenv": "^16.4.5"
+  }
+}
